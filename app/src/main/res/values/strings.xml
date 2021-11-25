@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Gossiper</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_clear">Clear</string>
 </resources>
