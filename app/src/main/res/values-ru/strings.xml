@@ -3,4 +3,5 @@
     <string name="app_name">Сплетни</string>
     <string name="action_stop">Стоп</string>
     <string name="action_clear">Очистить</string>
+    <string name="request_hint">Чего изволите?</string>
 </resources>
