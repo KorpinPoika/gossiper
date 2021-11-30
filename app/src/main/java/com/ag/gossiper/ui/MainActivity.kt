@@ -1,11 +1,9 @@
 package com.ag.gossiper.ui
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +11,7 @@ import com.ag.gossiper.R
 import com.ag.gossiper.databinding.ActivityMainBinding
 import com.ag.gossiper.ui.viewmodel.MainViewModel
 import com.ag.gossiper.ui.viewmodel.MainViewModelFactory
-import com.wolfram.alpha.WAEngine
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,6 +52,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return false
+    }
+
+    fun showSnackBar(msg: String) {
+        Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_INDEFINITE).apply {
+            setAction(android.R.string.ok) {
+                dismiss()
+            }
+            show()
+        }
     }
 
 }
