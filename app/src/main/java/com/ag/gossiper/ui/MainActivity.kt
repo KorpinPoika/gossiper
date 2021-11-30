@@ -13,6 +13,7 @@ import com.ag.gossiper.R
 import com.ag.gossiper.databinding.ActivityMainBinding
 import com.ag.gossiper.ui.viewmodel.MainViewModel
 import com.ag.gossiper.ui.viewmodel.MainViewModelFactory
+import com.wolfram.alpha.WAEngine
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.setOnMenuItemClickListener { onMenuItemClick(it) }
         binding.lvRequests.layoutManager = LinearLayoutManager(this)
 
+        //WAEngine
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
