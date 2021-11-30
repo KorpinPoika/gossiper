@@ -29,6 +29,19 @@
     05:45 - add corutines to project (gradle)
     07:23 - runCatching inside corutine :)
 
+-------------------------------- Wolfram ----------------------
+login: gmail
+pwd: KP
+
+Keys from site:
+    APP NAME: gossiper
+
+    APPID: 6PY94V-9RX4GP9G23
+
+    USAGE TYPE: Personal/Non-commercial Only
+
+
+
 
 
 
