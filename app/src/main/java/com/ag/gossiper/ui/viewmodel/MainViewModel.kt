@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
     val TAG = "MainViewModel"
@@ -21,11 +24,25 @@ class MainViewModel: ViewModel() {
 
     }
 
-    fun stop(){
+    fun stop() {
         Log.d(TAG, "Stop action selected")
     }
 
-    fun clearRequests(){
+    fun clearRequests() {
         Log.d(TAG, "Clear pods action selected")
+    }
+
+    fun voiceInput() {
+        Log.d(TAG, "Voice input button clicked")
+        isLoading.set(true)
+
+        viewModelScope.launch {
+            try {
+                delay(2_000)
+            }
+            finally {
+                isLoading.set(false)
+            }
+        }
     }
 }
