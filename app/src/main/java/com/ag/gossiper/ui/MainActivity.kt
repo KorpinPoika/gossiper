@@ -1,11 +1,14 @@
 package com.ag.gossiper.ui
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ag.gossiper.R
 import com.ag.gossiper.databinding.ActivityMainBinding
 import com.ag.gossiper.ui.viewmodel.MainViewModel
@@ -28,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
 
         binding.toolbar.setOnMenuItemClickListener { onMenuItemClick(it) }
-
+        binding.lvRequests.layoutManager = LinearLayoutManager(this)
 
     }
 
