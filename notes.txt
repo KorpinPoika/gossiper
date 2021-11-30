@@ -1,0 +1,42 @@
+2.5 Работа над приложением
+    10:15 - add string resources (eng, rus)
+    13:03 - add pictures for menu buttons
+    14:10 - application`s top panel. How to change to custom.
+        The theme base theme should be changed
+    16:42 - add material toolbar instead of top panel
+    19:37 - attach the toolbar to application
+    21:06 - add menu buttons to toolbar
+    27:03 - add text field
+    29:42 - textEdit xml code
+    30:18 - add list
+    32:52 - list item design
+    41:13 - connect data to ListView items over SimpleAdapter
+    42:00 - add floating button
+    45:05 - add progress bar
+
+3.2
+    02:28 - CorutineScope, withContext - to get results to ui thread
+    03:10 - Permissions
+
+3.3
+    02:26 - API Yandex translator, weather, music, fx rates (!)
+
+3.4 Wolfram Alpha
+    00:00 - get wolfram key from site, include wolfram sdk lib to project
+
+3.5
+    03:27 - snackBar to display errors
+    05:45 - add corutines to project (gradle)
+    07:23 - runCatching inside corutine :)
+
+
+
+
+
+
+
+
+
+
+
+
