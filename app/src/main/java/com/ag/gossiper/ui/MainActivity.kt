@@ -13,6 +13,7 @@ import com.ag.gossiper.ui.viewmodel.IErrorHandler
 import com.ag.gossiper.ui.viewmodel.MainViewModel
 import com.ag.gossiper.ui.viewmodel.MainViewModelFactory
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
 
 class MainActivity : AppCompatActivity(), IErrorHandler {
 
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity(), IErrorHandler {
 
 //        binding.txtRequest.onEditorAction()
 
-        //WAEngine
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

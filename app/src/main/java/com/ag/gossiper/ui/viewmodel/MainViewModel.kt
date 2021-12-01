@@ -7,10 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wolfram.alpha.WAEngine
 import com.wolfram.alpha.WAPlainText
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class MainViewModel: ViewModel(), OnRequestEditorActionListener {
     val TAG = "MainViewModel"
@@ -61,7 +58,7 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener {
     private fun askWolfram(request: String) {
         isLoading.set(true)
 
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val query = wolframEngine.createQuery().apply {
                 input = request
             }
