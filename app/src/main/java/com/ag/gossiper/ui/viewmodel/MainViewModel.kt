@@ -5,11 +5,18 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wolfram.alpha.WAEngine
+import com.wolfram.alpha.WAPlainText
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class MainViewModel: ViewModel() {
+class MainViewModel: ViewModel(), OnRequestEditorActionListener {
     val TAG = "MainViewModel"
+    val WA_APP_ID = "6PY94V-9RX4GP9G23"
+
+    var errorHandler: IErrorHandler? = null
 
     val isLoading = ObservableField(false)
 
@@ -20,8 +27,9 @@ class MainViewModel: ViewModel() {
         add(RequestItem("Caption3", "Content3"))
     }
 
-    fun newRequest(request: String){
-
+    private val wolframEngine = WAEngine().apply {
+        appID = WA_APP_ID
+        addFormat("plaintext")
     }
 
     fun stop() {
@@ -30,19 +38,67 @@ class MainViewModel: ViewModel() {
 
     fun clearRequests() {
         Log.d(TAG, "Clear pods action selected")
+        requestStr.set("")
+        requestList.clear()
     }
 
     fun voiceInput() {
         Log.d(TAG, "Voice input button clicked")
+    }
+
+    override fun onEditorActionDone() {
+        requestStr.get()?.let {
+            newRequest(it)
+        }
+    }
+
+    private fun newRequest(request: String){
+        Log.d(TAG, "got a new request: $request")
+        requestList.clear()
+        askWolfram(request)
+    }
+
+    private fun askWolfram(request: String) {
         isLoading.set(true)
 
         viewModelScope.launch {
-            try {
-                delay(2_000)
+            val query = wolframEngine.createQuery().apply {
+                input = request
             }
-            finally {
-                isLoading.set(false)
+
+            runCatching {
+                wolframEngine.performQuery( query )
+            }.onSuccess { result ->
+                withContext(Dispatchers.Main) {
+                    isLoading.set(false)
+
+                    if (result.isError) {
+                        errorHandler?.showSnackBar(result.errorMessage)
+                        return@withContext
+                    }
+
+                    if (!result.isSuccess) {
+                        errorHandler?.showRequestInputError("Don1t understand your question")
+                        return@withContext
+                    }
+
+                    val answers = result.pods.filter { !it.isError }.flatMap {
+                        pod -> pod.subpods.flatMap {
+                            it.contents.filterIsInstance<WAPlainText>().map {
+                                answer ->RequestItem( pod.title, answer.text )
+                            }
+                        }
+                    }
+
+                    requestList.addAll(answers)
+                }
+            }.onFailure { t ->
+                withContext(Dispatchers.Main) {
+                    isLoading.set(false)
+                    errorHandler?.showSnackBar(t.message ?: "Unknown error")
+                }
             }
         }
     }
+
 }

@@ -1,9 +1,26 @@
 package com.ag.gossiper.ui.viewmodel
 
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
 
+@BindingAdapter("app:requestOnEditorActionListener")
+fun setCustomOnEditorActionListener(view: TextInputEditText, listener: OnRequestEditorActionListener?) {
+    if (listener == null) {
+        view.setOnEditorActionListener(null)
+    } else {
+        view.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                listener.onEditorActionDone()
+            }
+            false
+        }
+    }
+}
 @BindingAdapter("app:itemViewModels")
 fun setItems(listView: RecyclerView, items: ObservableArrayList<RequestItem>?) {
     items?.let {
@@ -21,3 +38,4 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView, items: ObservableArra
         null
     }
 }
+

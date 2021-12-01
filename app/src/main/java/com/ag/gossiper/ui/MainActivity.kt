@@ -9,11 +9,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ag.gossiper.R
 import com.ag.gossiper.databinding.ActivityMainBinding
+import com.ag.gossiper.ui.viewmodel.IErrorHandler
 import com.ag.gossiper.ui.viewmodel.MainViewModel
 import com.ag.gossiper.ui.viewmodel.MainViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IErrorHandler {
 
     lateinit var viewModel: MainViewModel
     lateinit var binding: ActivityMainBinding
@@ -28,9 +29,12 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, MainViewModelFactory())[MainViewModel::class.java]
         binding.viewModel = viewModel
+        viewModel.errorHandler = this
 
         binding.toolbar.setOnMenuItemClickListener { onMenuItemClick(it) }
         binding.lvRequests.layoutManager = LinearLayoutManager(this)
+
+//        binding.txtRequest.onEditorAction()
 
         //WAEngine
     }
@@ -54,7 +58,11 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
-    fun showSnackBar(msg: String) {
+    override fun showRequestInputError(msg: String) {
+        binding.txtRequest.error = msg
+    }
+
+    override fun showSnackBar(msg: String) {
         Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_INDEFINITE).apply {
             setAction(android.R.string.ok) {
                 dismiss()
