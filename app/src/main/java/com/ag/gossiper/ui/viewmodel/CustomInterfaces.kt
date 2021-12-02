@@ -1,7 +1,7 @@
 package com.ag.gossiper.ui.viewmodel
 
 interface OnRequestEditorActionListener {
-    fun onEditorActionDone()
+    fun onEditorActionDone(text: String?)
 }
 
 interface IErrorHandler {

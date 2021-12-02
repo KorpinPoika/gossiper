@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.wolfram.alpha.WAEngine
 import com.wolfram.alpha.WAPlainText
 import kotlinx.coroutines.*
@@ -29,7 +28,11 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener {
         addFormat("plaintext")
     }
 
-    fun stop() {
+    fun voiceInput() {
+        Log.d(TAG, "Voice input button clicked")
+    }
+
+    fun stopSpeech() {
         Log.d(TAG, "Stop action selected")
     }
 
@@ -39,12 +42,8 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener {
         requestList.clear()
     }
 
-    fun voiceInput() {
-        Log.d(TAG, "Voice input button clicked")
-    }
-
-    override fun onEditorActionDone() {
-        requestStr.get()?.let {
+    override fun onEditorActionDone(text: String?) {
+        text?.let {
             newRequest(it)
         }
     }
@@ -90,6 +89,8 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener {
                     requestList.addAll(answers)
                 }
             }.onFailure { t ->
+                Log.e(TAG, t.message ?: "Unknown error")
+
                 withContext(Dispatchers.Main) {
                     isLoading.set(false)
                     errorHandler?.showSnackBar(t.message ?: "Unknown error")

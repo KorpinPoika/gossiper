@@ -13,7 +13,6 @@ import com.ag.gossiper.ui.viewmodel.IErrorHandler
 import com.ag.gossiper.ui.viewmodel.MainViewModel
 import com.ag.gossiper.ui.viewmodel.MainViewModelFactory
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
 
 class MainActivity : AppCompatActivity(), IErrorHandler {
 
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity(), IErrorHandler {
     private fun onMenuItemClick(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.action_stop -> {
-                viewModel?.stop()
+                viewModel?.stopSpeech()
                 return true
             }
             R.id.action_clear -> {
