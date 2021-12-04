@@ -1,9 +1,11 @@
 package com.ag.gossiper.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +38,8 @@ class MainActivity : AppCompatActivity(), IErrorHandler {
         binding.lvRequests.layoutManager = LinearLayoutManager(this)
 
         viewModel.tryInitSpeechAbility(this)
+        viewModel.initVoiceInputLauncher(this)
+
 
     }
 

@@ -1,8 +1,15 @@
 package com.ag.gossiper.ui.viewmodel
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
@@ -33,6 +40,8 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener, OnListItemActio
         addFormat("plaintext")
     }
 
+    private var voiceInputLauncher: ActivityResultLauncher<Intent>? = null
+
     private lateinit var textToSpeech: TextToSpeech
     var canSpeech = false; private set
 
@@ -48,6 +57,20 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener, OnListItemActio
         textToSpeech.language = Locale.US
     }
 
+    fun initVoiceInputLauncher(context: ComponentActivity) {
+        if (voiceInputLauncher == null) {
+            voiceInputLauncher =
+                context.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                    if (result.resultCode == Activity.RESULT_OK) {
+                        result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)?.let {
+                            requestStr.set(it)
+                            newRequest(it)
+                        }
+                    }
+                }
+        }
+    }
+
     override fun onItemClick(item: RequestItem) {
         Log.d(TAG, "process request ${item.title}")
         if ( !canSpeech ) {
@@ -59,6 +82,18 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener, OnListItemActio
 
     fun voiceInput() {
         Log.d(TAG, "Voice input button clicked")
+
+        runCatching {
+            voiceInputLauncher?.launch(
+                Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                    putExtra(RecognizerIntent.EXTRA_PROMPT, "Ask your question")
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.US)
+                }            )
+        }.onFailure { e ->
+            Log.e(TAG, e.message ?: "Voice subsystem init failed")
+            errorHandler?.showRequestInputError(e.message ?: "Voice subsystem init failed")
+        }
     }
 
     fun stopSpeech() {
@@ -132,6 +167,5 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener, OnListItemActio
             }
         }
     }
-
 
 }
