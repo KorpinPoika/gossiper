@@ -27,6 +27,18 @@ fun setItems(listView: RecyclerView, items: ObservableArrayList<RequestItem>?) {
     }
 }
 
+@BindingAdapter("app:onClickItem")
+fun setOnItemClickHandler(listView: RecyclerView, listener: OnListItemActionListener?) {
+    listener?.let { handler ->
+        val adapter = getOrCreateAdapter(listView, null)
+        (adapter ?: listView.adapter as RequestsListAdapter)?.let {
+            it.onItemClickHandler = { x ->
+                handler.onItemClick(x)
+            }
+        }
+    }
+}
+
 private fun getOrCreateAdapter(recyclerView: RecyclerView, items: ObservableArrayList<RequestItem>?): RequestsListAdapter? {
     return if (recyclerView.adapter != null && recyclerView.adapter is RequestsListAdapter) {
         recyclerView.adapter as RequestsListAdapter

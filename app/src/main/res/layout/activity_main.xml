@@ -58,6 +58,7 @@
             android:layout_height="0dp"
             android:layout_margin="8dp"
             app:itemViewModels="@{viewModel.requestList}"
+            app:onClickItem="@{viewModel}"
             tools:listitem="@layout/request_item"
             />
 

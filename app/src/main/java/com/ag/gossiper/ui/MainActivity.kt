@@ -3,6 +3,7 @@ package com.ag.gossiper.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -34,8 +35,7 @@ class MainActivity : AppCompatActivity(), IErrorHandler {
         binding.toolbar.setOnMenuItemClickListener { onMenuItemClick(it) }
         binding.lvRequests.layoutManager = LinearLayoutManager(this)
 
-//        binding.txtRequest.onEditorAction()
-
+        viewModel.tryInitSpeechAbility(this)
 
     }
 

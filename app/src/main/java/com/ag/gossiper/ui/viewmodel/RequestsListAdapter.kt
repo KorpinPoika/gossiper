@@ -1,5 +1,6 @@
 package com.ag.gossiper.ui.viewmodel
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,8 @@ class RequestsListAdapter(
         requests.addOnListChangedCallback(Notifier(this))
     }
 
+    var onItemClickHandler: ((RequestItem) -> Unit)? = null
+
     fun updateItems(items: ObservableArrayList<RequestItem>?) {
         requests = items ?: ObservableArrayList()
         requests.addOnListChangedCallback(Notifier(this))
@@ -33,10 +36,16 @@ class RequestsListAdapter(
     }
 
     override fun onBindViewHolder(holder: RequestItemViewHolder, position: Int) {
-        holder.binding!!.request  = requests[position]
+        val selectedItem = requests[position]
+        holder.binding!!.request  = selectedItem
+
+        holder.itemView.setOnClickListener { _ ->
+            onItemClickHandler?.invoke(selectedItem)
+        }
     }
 
     override fun getItemCount(): Int = requests.size
+
 
 
     inner class RequestItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

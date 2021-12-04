@@ -1,5 +1,7 @@
 package com.ag.gossiper.ui.viewmodel
 
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
@@ -7,25 +9,52 @@ import androidx.lifecycle.ViewModel
 import com.wolfram.alpha.WAEngine
 import com.wolfram.alpha.WAPlainText
 import kotlinx.coroutines.*
+import java.util.*
 
-class MainViewModel: ViewModel(), OnRequestEditorActionListener {
+class MainViewModel: ViewModel(), OnRequestEditorActionListener, OnListItemActionListener {
     val TAG = "MainViewModel"
     val WA_APP_ID = "6PY94V-9RX4GP9G23"
+
 
     var errorHandler: IErrorHandler? = null
 
     val isLoading = ObservableField(false)
 
     val requestStr = ObservableField("")
-    val requestList = ObservableArrayList<RequestItem>().apply {
-        add(RequestItem("Caption1", "Content1"))
-        add(RequestItem("Caption2", "Content2"))
-        add(RequestItem("Caption3", "Content3"))
-    }
+    val requestList = ObservableArrayList<RequestItem>()
+//        .apply {
+//        add(RequestItem("Caption1", "Content1"))
+//        add(RequestItem("Caption2", "Content2"))
+//        add(RequestItem("Caption3", "Content3"))
+//    }
 
     private val wolframEngine = WAEngine().apply {
         appID = WA_APP_ID
         addFormat("plaintext")
+    }
+
+    private lateinit var textToSpeech: TextToSpeech
+    var canSpeech = false; private set
+
+    fun tryInitSpeechAbility(context: Context){
+        textToSpeech = TextToSpeech(context) { code ->
+            canSpeech = code == TextToSpeech.SUCCESS
+            if ( !canSpeech ) {
+                Log.e(TAG, "TextToSpeech init failed with code $code")
+                errorHandler?.showSnackBar("Text to speech is not ready" )
+            }
+        }
+
+        textToSpeech.language = Locale.US
+    }
+
+    override fun onItemClick(item: RequestItem) {
+        Log.d(TAG, "process request ${item.title}")
+        if ( !canSpeech ) {
+            return
+        }
+
+        textToSpeech.speak(item.content, TextToSpeech.QUEUE_FLUSH, null, item.title)
     }
 
     fun voiceInput() {
@@ -33,7 +62,12 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener {
     }
 
     fun stopSpeech() {
-        Log.d(TAG, "Stop action selected")
+        Log.d(TAG, "Stop speech action selected")
+        if ( !canSpeech || !textToSpeech.isSpeaking ) {
+            return
+        }
+
+        textToSpeech.stop()
     }
 
     fun clearRequests() {
@@ -98,5 +132,6 @@ class MainViewModel: ViewModel(), OnRequestEditorActionListener {
             }
         }
     }
+
 
 }
